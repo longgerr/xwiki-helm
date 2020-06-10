@@ -64,6 +64,7 @@ tests:
     set:
       image.pullPolicy: IfNotPresent
       service.internalPort: 8080
+      persistentStorage.enabled: true
     asserts:  
       - equal:
           path: metadata.name
@@ -82,12 +83,14 @@ tests:
           value: xwiki-data
       - equal:
           path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
-          value: xwiki
+          value: RELEASE-NAME-xwiki
       - matchSnapshot:
           path: spec.template.spec.containers[0].volumeMounts
       - matchSnapshot:
           path: spec.template.spec.volumes 
   - it: should properly set value pvc
+    set:
+      persistentStorage.enabled: true
     asserts:
       - isKind:
           of: PersistentVolumeClaim
@@ -97,7 +100,52 @@ tests:
         documentIndex: 1
       - equal:
           path: metadata.name
-          value: xwiki
+          value: RELEASE-NAME-xwiki
         documentIndex: 1
-
+  - it: should use empty local storage
+    set:
+      persistentStorage.enabled: false
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].name
+          value: xwiki-data
+      - equal:
+          path: spec.template.spec.volumes[0].name
+          value: xwiki-data
+      - isEmpty:
+          path: spec.template.spec.volumes[0].emptyDir
+  - it: should set environment variables from external DB configMap and secret
+    set:
+      mysql.enabled: false
+      postgresql.enabled: false
+      externalDB:
+        password:
+          value: ''
+          valueFrom:
+            secretKeyRef:
+              name: xwiki-db-secret
+              key: DB_PASSWORD_FROM_SECRET
+        user:
+          value: ''
+          valueFrom:
+            configMapKeyRef:
+              name: xwiki-db-config-map
+              key: DB_USER_FROM_CONFIGMAP
+        database:
+          value: ''
+          valueFrom:
+            configMapKeyRef:
+              name: xwiki-db-config-map
+              key: DB_NAME_FROM_CONFIGMAP
+        host:
+          value: ''
+          valueFrom:
+            configMapKeyRef:
+              name: xwiki-db-config-map
+              key: DB_HOST_FROM_CONFIGMAP
+    asserts:
+    - matchSnapshot:
+          path: spec.template.spec.containers[0].env
           

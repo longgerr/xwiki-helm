@@ -1,25 +1,71 @@
 should properly set value:
   1: |
-    - mountPath: /opt/solr/server/solr
+    - mountPath: /usr/local/xwiki/data
       name: xwiki-data
   2: |
     - name: xwiki-data
       persistentVolumeClaim:
-        claimName: xwiki
+        claimName: RELEASE-NAME-xwiki
 should properly set value pvc:
   1: |
     accessModes:
     - ReadWriteMany
     resources:
       requests:
-        storage: 500Mi
+        storage: 200Gi
+should set environment variables from external DB configMap and secret:
+  1: |
+    - name: JAVA_OPTS
+      value: -Xmx2048m
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: DB_PASSWORD_FROM_SECRET
+          name: xwiki-db-secret
+    - name: INDEX_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_HOST
+          name: RELEASE-NAME-xwiki
+    - name: INDEX_PORT
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_PORT
+          name: RELEASE-NAME-xwiki
+    - name: DB_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: DB_HOST_FROM_CONFIGMAP
+          name: xwiki-db-config-map
+    - name: DB_USER
+      valueFrom:
+        configMapKeyRef:
+          key: DB_USER_FROM_CONFIGMAP
+          name: xwiki-db-config-map
+    - name: DB_DATABASE
+      valueFrom:
+        configMapKeyRef:
+          key: DB_NAME_FROM_CONFIGMAP
+          name: xwiki-db-config-map
 should use custom image:
   1: |
+    - name: JAVA_OPTS
+      value: -Xmx2048m
     - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
           key: DB_PASSWORD
-          name: RELEASE-NAME
+          name: RELEASE-NAME-xwiki
+    - name: INDEX_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_HOST
+          name: RELEASE-NAME-xwiki
+    - name: INDEX_PORT
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_PORT
+          name: RELEASE-NAME-xwiki
     - name: DB_HOST
       valueFrom:
         configMapKeyRef:
@@ -37,11 +83,23 @@ should use custom image:
           name: RELEASE-NAME-xwiki
 should use mysql lts image:
   1: |
+    - name: JAVA_OPTS
+      value: -Xmx2048m
     - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
           key: mysql-password
           name: RELEASE-NAME-mysql
+    - name: INDEX_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_HOST
+          name: RELEASE-NAME-xwiki
+    - name: INDEX_PORT
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_PORT
+          name: RELEASE-NAME-xwiki
     - name: DB_HOST
       valueFrom:
         configMapKeyRef:
@@ -59,11 +117,23 @@ should use mysql lts image:
           name: RELEASE-NAME-xwiki
 should use postgres lts image:
   1: |
+    - name: JAVA_OPTS
+      value: -Xmx2048m
     - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
           key: postgresql-password
           name: RELEASE-NAME-postgresql
+    - name: INDEX_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_HOST
+          name: RELEASE-NAME-xwiki
+    - name: INDEX_PORT
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_PORT
+          name: RELEASE-NAME-xwiki
     - name: DB_HOST
       valueFrom:
         configMapKeyRef:

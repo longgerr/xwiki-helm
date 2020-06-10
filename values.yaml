@@ -6,11 +6,11 @@ image:
   name: xwiki
   pullPolicy: IfNotPresent
 ## Image Tag useful when externalDB is been used
-  tag: ''
+  tag: lts-mysql-tomcat
 service:
   portName: node
   name: http
-  type: LoadBalancer
+  type: NodePort
   externalPort: 80
   internalPort: 8080
 resources:
@@ -27,7 +27,7 @@ resources:
 ##
 mysql:
  ## Whether to deploy a mysql server. Set false for a different database.
-  enabled: true
+  enabled: false
   mysqlRootPassword: xwiki
   mysqlUser: xwiki
   mysqlPassword: xwiki
@@ -66,11 +66,34 @@ postgresql:
 ## Would be used only if postgres and mysql is disabled.
 ## Set the image tag if want to use externalDB
 ##
+## If fromConfigMap or fromSecret is defined, the value 
+## in configmap or secret is used instead of direct value input
+##
 externalDB:
-  password: ''
-  user: ''
-  database: ''
-  host: ''
+  password:
+    value: ''
+    valueFrom:
+      # secretKeyRef:
+      #   name: xwiki-db-secret
+      #   key: DB_PASSWORD
+  user:
+    value: ''
+    valueFrom:
+    #   configMapKeyRef:
+    #     name: xwiki-db-config-map
+    #     key: DB_USER
+  database:
+    value: ''
+    valueFrom:
+    #   configMapKeyRef:
+    #     name: xwiki-db-config-map
+    #     key: DB_NAME
+  host:
+    value: ''
+    valueFrom:
+    #   configMapKeyRef:
+    #     name: xwiki-db-config-map
+    #     key: DB_HOST
 
 ##
 ## To use external solr enable solr, provide host and port
@@ -83,7 +106,7 @@ solr:
 # To use ingress for routing set ingress.enabled value to true and istio.enabled value to false
 ingress:
   enabled: true
-  issuer: dev-issuer
+  hosts: []
   annotations:
     kubernetes.io/ingress.class: nginx
     #   ingress.kubernetes.io/rewrite-target: /
@@ -92,9 +115,13 @@ ingress:
 istio:
   enabled: false
   host: "*"
-storage: "500Mi"
-storageClassName: ""
-buildID: "123"
+
+# PVC storage
+persistentStorage:
+  enabled: true
+  storage: "200Gi"
+  storageClassName: ""
+
 
 
 ## Read about PostDistribution budget at https://kubernetes.io/docs/concepts/workloads/pods/disruptions/

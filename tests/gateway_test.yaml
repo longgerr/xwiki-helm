@@ -14,7 +14,7 @@ tests:
           of: networking.istio.io/v1alpha3
       - equal:
           path: metadata.name
-          value: xwiki-gateway
+          value: release-xwiki
       - matchSnapshot:
           path: spec
   - it: should properly set value of VirtualService
@@ -30,7 +30,7 @@ tests:
         documentIndex: 1
       - equal:
           path: metadata.name
-          value: xwiki
+          value: RELEASE-NAME-xwiki
         documentIndex: 1
       - matchSnapshot:
           path: spec

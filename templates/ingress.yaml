@@ -1,20 +1,41 @@
 {{- if .Values.ingress.enabled -}}
+{{- $defaultServiceHost := include "default-service-host" . | trim -}}
+{{- $allHosts := $defaultServiceHost | append (default (list) .Values.ingress.hosts) | compact -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "fullname" . }}
+  namespace: {{ .Release.Namespace }}
   annotations:
   {{- if .Values.ingress.annotations }}
-      {{ toYaml .Values.ingress.annotations | indent 0 }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
   {{- end }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   rules:
-  -  http:
+  {{- if $allHosts }}
+    {{- range $host := $allHosts }}
+  - host: {{ $host }}
+    http:
       paths:
       - path: /
         backend:
-          serviceName: {{ template "fullname" . }}
-          servicePort: {{ .Values.service.externalPort }}
+          serviceName: {{ include "fullname" $ }}
+          servicePort: {{ $.Values.service.externalPort }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+
+
+
+{{- define "default-service-host" }}
+{{- $serviceName := include "fullname" . -}}
+{{- if .Values.clusterDomain -}}
+  {{- if .Values.clusterGatewayEnabled }}
+    {{- printf "%s.%s.gw.%s.lenovo.com" $serviceName .Release.Namespace .Values.clusterDomain -}}
+  {{- else -}}
+    {{- printf "%s.%s.k8s.%s.lenovo.com" $serviceName .Release.Namespace .Values.clusterDomain -}}
+  {{- end -}}
+{{- end -}}
 {{- end -}}

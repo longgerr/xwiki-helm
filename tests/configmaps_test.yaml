@@ -66,9 +66,9 @@ tests:
           value: xwikidb
   - it: should set externalDB config values
     set:
-      externalDB.user: xwiki
-      externalDB.host: xwiki-host
-      externalDB.database: xwikidb
+      externalDB.user.value: xwiki
+      externalDB.host.value: xwiki-host
+      externalDB.database.value: xwikidb
       mysql.enabled: false
       postgresql.enabled: false
     asserts:
@@ -81,3 +81,33 @@ tests:
       - equal:
           path: data.DB_DATABASE
           value: xwikidb
+  - it: should set empty value to env var when external DB configMap and secret are used
+    set:
+      mysql.enabled: false
+      postgresql.enabled: false
+      externalDB:
+        user:
+          value: ''
+          valueFrom:
+            configMapKeyRef:
+              name: xwiki-db-config-map
+              key: DB_USER
+        database:
+          value: ''
+          valueFrom:
+            configMapKeyRef:
+              name: xwiki-db-config-map
+              key: DB_NAME
+        host:
+          value: ''
+          valueFrom:
+            configMapKeyRef:
+              name: xwiki-db-config-map
+              key: DB_HOST
+    asserts:
+      - isNull:
+          path: data.DB_USER
+      - isNull:
+          path: data.DB_HOST
+      - isNull:
+          path: data.DB_DATABASE

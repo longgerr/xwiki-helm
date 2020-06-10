@@ -1,7 +1,7 @@
 should properly set value of VirtualService:
   1: |
     gateways:
-    - xwiki-gateway
+    - RELEASE-NAME-xwiki
     hosts:
     - '*'
     http:

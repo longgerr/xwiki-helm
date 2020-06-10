@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
   {{- if .Values.mysql.enabled }}
     app: "{{ .Values.image.name }}-{{ .Chart.AppVersion }}-lts-mysql-tomcat"
@@ -39,6 +40,9 @@ spec:
           value: "-Xmx2048m"
         - name: DB_PASSWORD
           valueFrom:
+      {{- if .Values.externalDB.password.valueFrom }}
+{{ .Values.externalDB.password.valueFrom | toYaml | indent 12 }}
+      {{- else }}
             secretKeyRef:
         {{- if .Values.mysql.enabled }}
               name: "{{ .Release.Name }}-mysql"
@@ -47,9 +51,10 @@ spec:
               name: "{{ .Release.Name }}-postgresql"
               key: postgresql-password
         {{- else }}
-              name: {{ .Release.Name | quote }}
+              name: {{ include "fullname" . | quote }}
               key: DB_PASSWORD
         {{- end }}
+      {{- end }}
         {{- if .Values.solr.enabled }}
         - name: INDEX_HOST
           valueFrom:
@@ -64,39 +69,61 @@ spec:
         {{- end }}
         - name: DB_HOST
           valueFrom:
+          {{- if .Values.externalDB.host.valueFrom }}
+{{ .Values.externalDB.host.valueFrom | toYaml | indent 12 }}
+          {{- else }}
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: DB_HOST
+          {{- end }}
+        
         - name: DB_USER
           valueFrom:
+          {{- if .Values.externalDB.user.valueFrom }}
+{{ .Values.externalDB.user.valueFrom | toYaml | indent 12 }}
+          {{- else }}
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: DB_USER
+          {{- end }}
+
         - name: DB_DATABASE
           valueFrom:
+          {{- if .Values.externalDB.database.valueFrom }}
+{{ .Values.externalDB.database.valueFrom | toYaml | indent 12 }}
+          {{- else }}
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: DB_DATABASE
+          {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
         volumeMounts:
         - name: xwiki-data
-          mountPath: /opt/solr/server/solr
+          mountPath: /usr/local/xwiki/data
       volumes:
       - name: xwiki-data
+        {{- if .Values.persistentStorage.enabled }}
         persistentVolumeClaim:
-          claimName: xwiki
+          claimName: {{ template "fullname" . }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
 ---
+
+{{- if .Values.persistentStorage.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: xwiki
+  name: {{ template "fullname" . }}
+  namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: {{ .Values.storage }}
-    {{- if .Values.storageClass }}
-    storageClassName: {{ .Values.storageClass | quote }}
+      storage: {{ .Values.persistentStorage.storage }}
+    {{- if .Values.persistentStorage.storageClass }}
+    storageClassName: {{ .Values.persistentStorage.storageClass | quote }}
     {{- end }}
+{{- end }}
