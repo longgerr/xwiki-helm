@@ -116,6 +116,59 @@ tests:
           value: xwiki-data
       - isEmpty:
           path: spec.template.spec.volumes[0].emptyDir
+  - it: should run in node sticky mode and use hostPath storage
+    set:
+      persistentStorage.enabled: false
+      nodeStickyMode:
+        enabled: true
+        dataHostPath: /app/xwiki/data
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: xwiki
+                operator: In
+                values:
+                - "true"
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.volumes[0].hostPath.path
+          value: /app/xwiki/data
+      - equal:
+          path: spec.template.spec.volumes[0].hostPath.type
+          value: DirectoryOrCreate
+      - matchSnapshot:
+          path: spec.template.spec.affinity
+  - it: should not run in node sticky mode even nodeAffinity is set
+    set:
+      persistentStorage.enabled: true
+      nodeStickyMode:
+        enabled: false
+        dataHostPath: /app/xwiki/data
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: xwiki
+                operator: In
+                values:
+                - "true"
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].name
+          value: xwiki-data
+      - equal:
+          path: spec.template.spec.volumes[0].name
+          value: xwiki-data
+      - equal:
+          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+          value: RELEASE-NAME-xwiki
+      - isEmpty:
+          path: spec.template.spec.affinity
   - it: should set environment variables from external DB configMap and secret
     set:
       mysql.enabled: false

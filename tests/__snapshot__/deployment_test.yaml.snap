@@ -13,6 +13,16 @@ should properly set value pvc:
     resources:
       requests:
         storage: 200Gi
+should run in node stick mode and use hostPath storage:
+  1: |
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: xwiki
+            operator: In
+            values:
+            - "true"
 should set environment variables from external DB configMap and secret:
   1: |
     - name: JAVA_OPTS

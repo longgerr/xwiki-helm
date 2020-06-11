@@ -122,6 +122,22 @@ persistentStorage:
   storage: "200Gi"
   storageClassName: ""
 
+# Use nodeStickyMode to run xwiki
+# In this mode, hostPath is used as data volume, and xwiki pod is configured to run on a specific node
+# If dataHostPath is provided, xwiki pod mounts hostPath insread of persistent volumes
+# nodeAffinity will be used as pod's spec.affinity.nodeAffinity
+nodeStickyMode:
+  enabled: false
+  # dataHostPath: /app/xwiki/data
+  # nodeAffinity:
+  #   requiredDuringSchedulingIgnoredDuringExecution:
+  #     nodeSelectorTerms:
+  #     - matchExpressions:
+  #       - key: xwiki
+  #         operator: In
+  #         values:
+  #         - "true"
+
 
 
 ## Read about PostDistribution budget at https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
