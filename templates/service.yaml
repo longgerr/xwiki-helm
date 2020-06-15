@@ -4,6 +4,8 @@ metadata:
   name: {{ template "fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
+    app: "{{ template "fullname" . }}"
+    version: "{{ .Chart.AppVersion }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   type: {{ .Values.service.type }}

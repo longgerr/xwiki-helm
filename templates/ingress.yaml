@@ -11,6 +11,8 @@ metadata:
 {{ toYaml .Values.ingress.annotations | indent 4 }}
   {{- end }}
   labels:
+    app: "{{ template "fullname" . }}"
+    version: "{{ .Chart.AppVersion }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   rules:
