@@ -2,6 +2,10 @@
 
 This file documents all notable changes to xwiki Helm Chart. The release numbering uses semantic versioning.
 
+## v1.0.3
+
+* Support value `hostAliases` to resolve extension DNS issue.
+
 ## v1.0.2
 
 * Change deployment label `app` to use full name instead of image name.

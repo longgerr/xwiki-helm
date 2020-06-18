@@ -13,7 +13,7 @@ should properly set value pvc:
     resources:
       requests:
         storage: 200Gi
-should run in node stick mode and use hostPath storage:
+should run in node sticky mode and use hostPath storage:
   1: |
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:

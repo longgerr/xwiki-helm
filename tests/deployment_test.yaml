@@ -16,12 +16,9 @@ tests:
           value: default:latest
       - matchSnapshot:
           path: spec.template.spec.containers[0].env
-      - matchRegex:
+      - equal:
           path: metadata.labels.app
-          pattern: default-*
-      - matchRegex:
-          path: metadata.labels.app
-          pattern: -latest          
+          value: RELEASE-NAME-xwiki       
   - it: should use mysql lts image
     set:
       image.tag: latest
@@ -35,12 +32,9 @@ tests:
           value: xwiki:lts-mysql-tomcat
       - matchSnapshot:
           path: spec.template.spec.containers[0].env
-      - matchRegex:
+      - equal:
           path: metadata.labels.app
-          pattern: xwiki-*
-      - matchRegex:
-          path: metadata.labels.app
-          pattern: -lts-mysql-tomcat
+          value: RELEASE-NAME-xwiki
   - it: should use postgres lts image
     set:
       image.tag: latest
@@ -54,12 +48,9 @@ tests:
           value: xwiki:lts-postgres-tomcat
       - matchSnapshot:
           path: spec.template.spec.containers[0].env
-      - matchRegex:
+      - equal:
           path: metadata.labels.app
-          pattern: xwiki-*
-      - matchRegex:
-          path: metadata.labels.app
-          pattern: -lts-postgres-tomcat 
+          value: RELEASE-NAME-xwiki
   - it: should properly set value
     set:
       image.pullPolicy: IfNotPresent

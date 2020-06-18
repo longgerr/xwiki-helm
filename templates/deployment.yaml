@@ -22,6 +22,10 @@ spec:
         nodeAffinity:
 {{ .Values.nodeStickyMode.nodeAffinity | toYaml | indent 10 }}
       {{- end }}
+      hostAliases:
+      {{- if .Values.hostAliases }}
+{{ .Values.hostAliases | toYaml | indent 6 }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
       {{- if .Values.mysql.enabled }}
