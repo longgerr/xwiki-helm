@@ -150,6 +150,9 @@ podDisruptionBudget:
 
 ## tomcat related settings
 tomcat:
-  # Use customized tomcat server.xml if set to true.
+  # Use customized tomcat server.xml if set sub values.
   # Maintain customized server.xml in files/server.xml
-  customServerConfig: true
+  customServerConfig:
+    # Use value org.apache.catalina.valves.RemoteIpValve
+    enableRemoteIPValue: true
+  

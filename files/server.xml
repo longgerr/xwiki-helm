@@ -164,7 +164,18 @@
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                prefix="localhost_access_log" suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
-
+{{- with .Values.tomcat.customServerConfig }}
+  {{- if .enableRemoteIPValue }}
+        <!-- Add this value for tomcat to replaces the apparent client remote IP address 
+             and hostname for the request with the IP address list presented by a proxy 
+             or a load balancer via a request headers (e.g. "X-Forwarded-For").
+             Refer to:
+             https://www.xwiki.org/xwiki/bin/view/Documentation/AdminGuide/Installation/InstallationWAR/InstallationTomcat/#HConfiguringtomcatforhttps
+        -->
+        <Valve className="org.apache.catalina.valves.RemoteIpValve" 
+               remoteIpHeader="x-forwarded-for" protocolHeader="x-forwarded-proto" />
+  {{- end }}
+{{- end }}
       </Host>
     </Engine>
   </Service>

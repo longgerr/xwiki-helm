@@ -113,7 +113,17 @@ tests:
           path: data.DB_DATABASE
   - it: should include tomcat settings into configmap
     set: 
-      tomcat.customServerConfig: true
+      tomcat.customServerConfig.enableRemoteIPValue: true
     asserts:
       - isNotNull:
+          path: data.server\.xml
+      - matchSnapshot:
+          path: data.server\.xml
+  - it: should not include remoteIPValue settings into configmap
+    set: 
+      tomcat.customServerConfig.enableRemoteIPValue: false
+    asserts:
+      - isNotNull:
+          path: data.server\.xml
+      - matchSnapshot:
           path: data.server\.xml

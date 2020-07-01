@@ -33,10 +33,10 @@ data:
   {{- end }}
 {{- end }}
 {{- with .Values.tomcat }}
-{{- if .customServerConfig }}
+  {{- if .customServerConfig }}
   server.xml: |-
-    {{- $.Files.Get "files/server.xml" | nindent 4 }}
-{{- end }}
+    {{- ( tpl ($.Files.Get "files/server.xml") $ ) | nindent 4 }}
+  {{- end }}
 {{- end }}
 # {{- range $key, $value := .Values.database }}
 #   {{ $key }}: {{ $value | indent 4 }}

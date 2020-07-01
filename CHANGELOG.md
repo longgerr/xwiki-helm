@@ -4,7 +4,9 @@ This file documents all notable changes to xwiki Helm Chart. The release numberi
 
 ## v1.0.4
 
-* Support value `tomcat.customServerConfig` to replace default tomcat `server.xml`. Put the customized `server.xml` in `files` folder.
+* Support value `tomcat.customServerConfig` to replace default tomcat `server.xml`.  
+  Maintain the customized template in `files/server.xml`.
+* Set `tomcat.customServerConfig.enableRemoteIPValue: true` to use value `org.apache.catalina.valves.RemoteIpValve`. 
 
 ## v1.0.3
 
