@@ -32,6 +32,12 @@ data:
   DB_DATABASE: {{ .Values.externalDB.database.value | quote }}
   {{- end }}
 {{- end }}
+{{- with .Values.tomcat }}
+{{- if .customServerConfig }}
+  server.xml: |-
+    {{- $.Files.Get "files/server.xml" | nindent 4 }}
+{{- end }}
+{{- end }}
 # {{- range $key, $value := .Values.database }}
 #   {{ $key }}: {{ $value | indent 4 }}
 # {{- end }}

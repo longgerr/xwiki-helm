@@ -104,6 +104,13 @@ spec:
         volumeMounts:
         - name: xwiki-data
           mountPath: /usr/local/xwiki/data
+        {{- with .Values.tomcat }}
+          {{- if .customServerConfig }}
+        - name: tomcat-config
+          mountPath: /usr/local/tomcat/conf/server.xml
+          subPath: server.xml
+          {{- end }}
+        {{- end }}
       volumes:
       - name: xwiki-data
         {{- if .Values.persistentStorage.enabled }}
@@ -116,6 +123,13 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
+      {{- with .Values.tomcat }}
+        {{- if .customServerConfig }}
+      - name: tomcat-config
+        configMap:
+          name: {{ template "fullname" $ }}
+        {{- end }}
+      {{- end }}
 ---
 
 {{- if .Values.persistentStorage.enabled }}

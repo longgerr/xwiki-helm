@@ -56,6 +56,7 @@ tests:
       image.pullPolicy: IfNotPresent
       service.internalPort: 8080
       persistentStorage.enabled: true
+      tomcat.customServerConfig: false
     asserts:  
       - equal:
           path: metadata.name
@@ -192,4 +193,22 @@ tests:
     asserts:
     - matchSnapshot:
           path: spec.template.spec.containers[0].env
-          
+  - it: should mount tomcat configmap
+    set: 
+      tomcat.customServerConfig: true
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[1].name
+          value: tomcat-config
+      - equal:
+          path: spec.template.spec.volumes[1].configMap.name
+          value: RELEASE-NAME-xwiki
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[1].name
+          value: tomcat-config
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[1].mountPath
+          value: /usr/local/tomcat/conf/server.xml
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[1].subPath
+          value: server.xml

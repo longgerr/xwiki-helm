@@ -146,3 +146,10 @@ podDisruptionBudget:
   enabled: false
   minAvailable: 1
   # maxUnavailable: 1
+
+
+## tomcat related settings
+tomcat:
+  # Use customized tomcat server.xml if set to true.
+  # Maintain customized server.xml in files/server.xml
+  customServerConfig: true
