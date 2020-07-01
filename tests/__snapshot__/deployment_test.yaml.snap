@@ -1,3 +1,16 @@
+should generate initContainer to patch config files:
+  1: |
+    - command:
+      - /bin/bash
+      - -c
+      - |-
+        update-config.sh -c "xwiki.cfg" -a "xwiki.authentication.authclass" -v "org.xwiki.contrib.authentication.customfield.CustomFieldAuthenticator" -r "/usr/local/xwiki/data"
+        update-config.sh -c "xwiki.cfg" -a "xwiki.superadminpassword" -v "the-pass-word" -r "/usr/local/xwiki/data"
+      image: langyb/xwiki-toolbox:latest
+      name: update-config
+      volumeMounts:
+      - mountPath: /usr/local/xwiki/data
+        name: xwiki-data
 should properly set value:
   1: |
     - mountPath: /usr/local/xwiki/data

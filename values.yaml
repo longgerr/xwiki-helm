@@ -155,4 +155,17 @@ tomcat:
   customServerConfig:
     # Use value org.apache.catalina.valves.RemoteIpValve
     enableRemoteIPValue: true
-  
+
+
+## customConfigAfterFirstStart replace the config values since the second start
+## During the first start, all configurations are initialized by docker-entrypoint.sh
+## From the second and future start, the provided configurations are modified
+customConfigAfterFirstStart:
+  xwiki.cfg:
+    ## Enable to allow superadmin.
+    ## Original default value: null
+    # xwiki.superadminpassword: system
+
+    ## Allows XWiki to use the authenticator that will allow users to log-in using their email address
+    ## Original default value: com.xpn.xwiki.user.impl.xwiki.XWikiAuthServiceImpl
+    xwiki.authentication.authclass: org.xwiki.contrib.authentication.customfield.CustomFieldAuthenticator

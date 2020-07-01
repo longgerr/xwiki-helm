@@ -111,6 +111,23 @@ spec:
           subPath: server.xml
           {{- end }}
         {{- end }}
+      {{- if .Values.customConfigAfterFirstStart }}
+      initContainers:
+      - name: update-config
+        image: langyb/xwiki-toolbox:latest
+        volumeMounts:
+        - name: xwiki-data
+          mountPath: /usr/local/xwiki/data
+        command:
+        - /bin/bash
+        - -c
+        - |-
+          {{- range $configFile, $attributes := .Values.customConfigAfterFirstStart }}
+          {{- range $k, $v := $attributes }}
+          update-config.sh -c "{{ $configFile }}" -a "{{ $k }}" -v "{{ $v }}" -r "/usr/local/xwiki/data"
+          {{- end }}
+          {{- end }}
+      {{- end }}
       volumes:
       - name: xwiki-data
         {{- if .Values.persistentStorage.enabled }}

@@ -212,3 +212,11 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[1].subPath
           value: server.xml
+  - it: should generate initContainer to patch config files
+    set:
+      customConfigAfterFirstStart:
+        xwiki.cfg:
+          xwiki.superadminpassword: "the-pass-word"
+    asserts:
+    - matchSnapshot:
+        path: spec.template.spec.initContainers
