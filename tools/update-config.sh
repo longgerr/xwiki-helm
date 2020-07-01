@@ -15,19 +15,23 @@ __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on
 # $2 - the setting/property to set
 # $3 - the new value
 function xwiki_replace() {
-  sed -i s~"\#\? \?$2 \?=.*"~"$2=$3"~g "$1"
+    if [ -f "$1" ]; then
+        sed -i s~"\#\? \?$2 \?=.*"~"$2=$3"~g "$1"
+    else
+        echo "Skip replace config due to file not found: $1"
+    fi
 }
 
 # $1 - the setting/property to set
 # $2 - the new value
 function xwiki_set_cfg() {
-  xwiki_replace "${XWIKI_DATA_ROOT}/xwiki.cfg" "$1" "$2"
+    xwiki_replace "${XWIKI_DATA_ROOT}/xwiki.cfg" "$1" "$2"
 }
 
 # $1 - the setting/property to set
 # $2 - the new value
 function xwiki_set_properties() {
-  xwiki_replace "${XWIKI_DATA_ROOT}/xwiki.properties" "$1" "$2"
+    xwiki_replace "${XWIKI_DATA_ROOT}/xwiki.properties" "$1" "$2"
 }
 
 # Allows to use sed but with user input which can contain special sed characters such as \, / or &.
@@ -35,7 +39,7 @@ function xwiki_set_properties() {
 # $2 - the replacement text
 # $3 - the file in which to do the search/replace
 function safesed {
-  sed -i "s/$(echo $1 | sed -e 's/\([[\/.*]\|\]\)/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" $3
+    sed -i "s/$(echo $1 | sed -e 's/\([[\/.*]\|\]\)/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" $3
 }
 
 
@@ -75,4 +79,6 @@ fi
 if [ "xwiki.cfg" == "${CONFIG_FILE}" ]; then
     echo "Set config to file ${CONFIG_FILE}, key: ${CONFIG_ATTRIBUTE}, value: ${CONFIG_VALUE}"
     xwiki_set_cfg "${CONFIG_ATTRIBUTE}" "${CONFIG_VALUE}"
+else
+    echo "Unsupported config file."
 fi
