@@ -2,6 +2,10 @@
 
 This file documents all notable changes to xwiki Helm Chart. The release numbering uses semantic versioning.
 
+## v1.0.6
+
+* Support `ingress.tls` to generate tls settings for ingress.
+
 ## v1.0.5
 
 * Support value `customConfigAfterFirstStart` to generate `initContainers` to patch config files after the first xwiki initialization start.

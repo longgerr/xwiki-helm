@@ -11,6 +11,11 @@ tests:
       service.internalPort: 8080
       service.name: tcp
       ingress.enabled: true
+      ingress:
+        tls:
+        - secretName: star-lenovo-com
+          hosts:
+            - glosse4lenovo.lenovo.com
     release:
       name: release
     asserts:

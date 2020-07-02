@@ -110,6 +110,12 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     #   ingress.kubernetes.io/rewrite-target: /
+  
+  ## Generate tls with the following settings
+  # tls:
+  # - secretName: star-lenovo-com
+  #   hosts:
+  #     - glosse4lenovo.lenovo.com
 
 # To use istio for routing set istio.enabled value to true and ingress.enabled value to false
 istio:

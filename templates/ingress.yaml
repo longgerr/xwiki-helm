@@ -15,6 +15,11 @@ metadata:
     version: "{{ .Chart.AppVersion }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
+  tls:
+    {{- if .Values.ingress.tls }}
+      {{- toYaml .Values.ingress.tls | nindent 4 }}
+    {{- end }}
+    {{- include "default-service-host-tls" . | nindent 4 }}
   rules:
   {{- if $allHosts }}
     {{- range $host := $allHosts }}
@@ -40,4 +45,23 @@ spec:
     {{- printf "%s.%s.k8s.%s.lenovo.com" $serviceName .Release.Namespace .Values.clusterDomain -}}
   {{- end -}}
 {{- end -}}
+{{- end -}}
+
+{{- define "default-service-host-tls" }}
+{{- $defaultServiceHost := include "default-service-host" . | trim -}}
+{{- if and .Values.clusterGatewaySecured $defaultServiceHost -}}
+{{- $secretName := include "host-to-secret" $defaultServiceHost -}}
+- hosts:
+  - {{ $defaultServiceHost }}
+  secretName: {{ $secretName }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Translate host to secret name
+*/}}
+{{- define "host-to-secret" }}
+{{- $list := . | splitList "." | rest -}}
+{{- $list := prepend $list "star" -}}
+{{ join "-" $list }}
 {{- end -}}

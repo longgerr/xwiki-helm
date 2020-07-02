@@ -115,6 +115,7 @@ spec:
       initContainers:
       - name: update-config
         image: langyb/xwiki-toolbox:latest
+        imagePullPolicy: Always
         volumeMounts:
         - name: xwiki-data
           mountPath: /usr/local/xwiki/data
