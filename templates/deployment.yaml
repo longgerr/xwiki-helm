@@ -20,11 +20,11 @@ spec:
       {{- if and .Values.nodeStickyMode.enabled .Values.nodeStickyMode.nodeAffinity }}
       affinity:
         nodeAffinity:
-{{ .Values.nodeStickyMode.nodeAffinity | toYaml | indent 10 }}
+          {{- .Values.nodeStickyMode.nodeAffinity | toYaml | nindent 10 }}
       {{- end }}
       hostAliases:
       {{- if .Values.hostAliases }}
-{{ .Values.hostAliases | toYaml | indent 6 }}
+        {{- .Values.hostAliases | toYaml | nindent 6 }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -39,25 +39,23 @@ spec:
         ports:
         - containerPort: {{ .Values.service.internalPort }}
         env:
-        - name: JAVA_OPTS
-          value: "-Xmx2048m"
         - name: DB_PASSWORD
           valueFrom:
-      {{- if .Values.externalDB.password.valueFrom }}
-{{ .Values.externalDB.password.valueFrom | toYaml | indent 12 }}
-      {{- else }}
+          {{- if .Values.externalDB.password.valueFrom }}
+            {{- .Values.externalDB.password.valueFrom | toYaml | nindent 12 }}
+          {{- else }}
             secretKeyRef:
-        {{- if .Values.mysql.enabled }}
+            {{- if .Values.mysql.enabled }}
               name: "{{ .Release.Name }}-mysql"
               key: mysql-password
-        {{- else if .Values.postgresql.enabled }}
+            {{- else if .Values.postgresql.enabled }}
               name: "{{ .Release.Name }}-postgresql"
               key: postgresql-password
-        {{- else }}
+            {{- else }}
               name: {{ include "fullname" . | quote }}
               key: DB_PASSWORD
-        {{- end }}
-      {{- end }}
+            {{- end }}
+          {{- end }}
         {{- if .Values.solr.enabled }}
         - name: INDEX_HOST
           valueFrom:
@@ -72,35 +70,40 @@ spec:
         {{- end }}
         - name: DB_HOST
           valueFrom:
-          {{- if .Values.externalDB.host.valueFrom }}
-{{ .Values.externalDB.host.valueFrom | toYaml | indent 12 }}
-          {{- else }}
+            {{- if .Values.externalDB.host.valueFrom }}
+              {{- .Values.externalDB.host.valueFrom | toYaml | nindent 12 }}
+            {{- else }}
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: DB_HOST
-          {{- end }}
+            {{- end }}
         
         - name: DB_USER
           valueFrom:
-          {{- if .Values.externalDB.user.valueFrom }}
-{{ .Values.externalDB.user.valueFrom | toYaml | indent 12 }}
-          {{- else }}
+            {{- if .Values.externalDB.user.valueFrom }}
+              {{- .Values.externalDB.user.valueFrom | toYaml | nindent 12 }}
+            {{- else }}
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: DB_USER
-          {{- end }}
+            {{- end }}
 
         - name: DB_DATABASE
           valueFrom:
-          {{- if .Values.externalDB.database.valueFrom }}
-{{ .Values.externalDB.database.valueFrom | toYaml | indent 12 }}
-          {{- else }}
+            {{- if .Values.externalDB.database.valueFrom }}
+              {{- .Values.externalDB.database.valueFrom | toYaml | nindent 12 }}
+            {{- else }}
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: DB_DATABASE
-          {{- end }}
+            {{- end }}
+        
+        {{- range $k, $v := .Values.env }}
+        - name: {{ $k | quote }}
+          value: {{ $v | quote }}
+        {{- end }}
         resources:
-{{ toYaml .Values.resources | indent 12 }}
+          {{- toYaml .Values.resources | nindent 12 }}
         volumeMounts:
         - name: xwiki-data
           mountPath: /usr/local/xwiki/data

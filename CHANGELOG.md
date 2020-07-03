@@ -2,6 +2,10 @@
 
 This file documents all notable changes to xwiki Helm Chart. The release numbering uses semantic versioning.
 
+## v1.0.7
+
+* Support value `env` to add additional environment variables to pod.
+
 ## v1.0.6
 
 * Support `ingress.tls` to generate tls settings for ingress.

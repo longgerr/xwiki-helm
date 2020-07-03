@@ -1,3 +1,37 @@
+should generate additional environment variables:
+  1: |
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: DB_PASSWORD
+          name: RELEASE-NAME-xwiki
+    - name: INDEX_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_HOST
+          name: RELEASE-NAME-xwiki
+    - name: INDEX_PORT
+      valueFrom:
+        configMapKeyRef:
+          key: INDEX_PORT
+          name: RELEASE-NAME-xwiki
+    - name: DB_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: DB_HOST
+          name: RELEASE-NAME-xwiki
+    - name: DB_USER
+      valueFrom:
+        configMapKeyRef:
+          key: DB_USER
+          name: RELEASE-NAME-xwiki
+    - name: DB_DATABASE
+      valueFrom:
+        configMapKeyRef:
+          key: DB_DATABASE
+          name: RELEASE-NAME-xwiki
+    - name: SOME_ENV
+      value: some-value
 should generate initContainer to patch config files:
   1: |
     - command:
@@ -39,8 +73,6 @@ should run in node sticky mode and use hostPath storage:
             - "true"
 should set environment variables from external DB configMap and secret:
   1: |
-    - name: JAVA_OPTS
-      value: -Xmx2048m
     - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
@@ -73,8 +105,6 @@ should set environment variables from external DB configMap and secret:
           name: xwiki-db-config-map
 should use custom image:
   1: |
-    - name: JAVA_OPTS
-      value: -Xmx2048m
     - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
@@ -107,8 +137,6 @@ should use custom image:
           name: RELEASE-NAME-xwiki
 should use mysql lts image:
   1: |
-    - name: JAVA_OPTS
-      value: -Xmx2048m
     - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
@@ -141,8 +169,6 @@ should use mysql lts image:
           name: RELEASE-NAME-xwiki
 should use postgres lts image:
   1: |
-    - name: JAVA_OPTS
-      value: -Xmx2048m
     - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:

@@ -220,3 +220,11 @@ tests:
     asserts:
     - matchSnapshot:
         path: spec.template.spec.initContainers
+
+  - it: should generate additional environment variables
+    set:
+      env:
+        SOME_ENV: some-value
+    asserts:
+    - matchSnapshot:
+        path: spec.template.spec.containers[0].env

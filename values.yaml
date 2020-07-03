@@ -20,6 +20,12 @@ resources:
   requests:
     cpu: 500m
     memory: 3000Mi
+
+## Append additional environment variables into pod 
+## These environment variables are appended at the end of env config
+env: 
+  JAVA_OPTS: "-Xmx2048m"
+
 ##
 ## MySql chart configuration
 ##
