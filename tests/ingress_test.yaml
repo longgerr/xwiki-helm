@@ -10,8 +10,8 @@ tests:
       service.externalPort: 80
       service.internalPort: 8080
       service.name: tcp
-      ingress.enabled: true
       ingress:
+        enabled: true
         tls:
         - secretName: star-lenovo-com
           hosts:
@@ -21,6 +21,7 @@ tests:
         ingress: true
       clusterDomain: dev-cluster
       clusterGatewayEnabled: true
+      clusterGatewaySecured: true
     release:
       name: release
     asserts:

@@ -37,3 +37,7 @@ should set values properly:
     - hosts:
       - glosse4lenovo.lenovo.com
       secretName: star-lenovo-com
+    - hosts:
+      - release-xwiki.NAMESPACE.gw.dev-cluster.lenovo.com
+      - glowroot-release-xwiki.NAMESPACE.gw.dev-cluster.lenovo.com
+      secretName: star-NAMESPACE-gw-dev-cluster-lenovo-com

@@ -61,10 +61,16 @@ spec:
 
 {{- define "default-service-host-tls" }}
 {{- $defaultServiceHost := include "default-service-host" . | trim -}}
+{{- $defaultGlowrootHost := printf "glowroot-%s" $defaultServiceHost -}}
 {{- if and .Values.clusterGatewaySecured $defaultServiceHost -}}
 {{- $secretName := include "host-to-secret" $defaultServiceHost -}}
 - hosts:
   - {{ $defaultServiceHost }}
+{{- with .Values.glowroot }}
+{{- if and .enabled .ingress }}
+  - {{ $defaultGlowrootHost }}
+{{- end }}
+{{- end }}
   secretName: {{ $secretName }}
 {{- end -}}
 {{- end -}}
