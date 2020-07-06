@@ -2,6 +2,10 @@
 
 This file documents all notable changes to xwiki Helm Chart. The release numbering uses semantic versioning.
 
+## v1.0.8
+
+* Support value `glowroot.enabled` and `glowroot.ingress` to expose glowroot to ingress
+
 ## v1.0.7
 
 * Support value `env` to add additional environment variables to pod.

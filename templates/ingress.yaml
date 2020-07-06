@@ -1,5 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 {{- $defaultServiceHost := include "default-service-host" . | trim -}}
+{{- $defaultGlowrootHost := printf "glowroot-%s" $defaultServiceHost -}}
 {{- $allHosts := $defaultServiceHost | append (default (list) .Values.ingress.hosts) | compact -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -31,6 +32,17 @@ spec:
           serviceName: {{ include "fullname" $ }}
           servicePort: {{ $.Values.service.externalPort }}
     {{- end }}
+  {{- end }}
+  {{- with .Values.glowroot }}
+  {{- if and .enabled .ingress }}
+  - host: {{ $defaultGlowrootHost }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ include "fullname" $ }}
+          servicePort: glowroot
+  {{- end }}
   {{- end }}
 {{- end -}}
 

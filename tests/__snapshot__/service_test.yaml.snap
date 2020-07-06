@@ -1,3 +1,18 @@
+should expose glowroot:
+  1: |
+    ports:
+    - name: tcp
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+    - name: glowroot
+      port: 4000
+      protocol: TCP
+      targetPort: 4000
+    selector:
+      app: release-xwiki
+    sessionAffinity: ClientIP
+    type: ClusterIP
 should set values properly:
   1: |
     ports:
@@ -5,6 +20,10 @@ should set values properly:
       port: 80
       protocol: TCP
       targetPort: 8080
+    - name: glowroot
+      port: 4000
+      protocol: TCP
+      targetPort: 4000
     selector:
       app: release-xwiki
     sessionAffinity: ClientIP

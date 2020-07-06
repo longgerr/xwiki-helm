@@ -1,8 +1,38 @@
+should not expose glowroot:
+  1: |
+    kubernetes.io/ingress.class: nginx
+  2: |
+    rules:
+    - host: release-xwiki.NAMESPACE.gw.dev-cluster.lenovo.com
+      http:
+        paths:
+        - backend:
+            serviceName: release-xwiki
+            servicePort: 80
+          path: /
+    tls:
+    - hosts:
+      - glosse4lenovo.lenovo.com
+      secretName: star-lenovo-com
 should set values properly:
   1: |
     kubernetes.io/ingress.class: nginx
   2: |
-    rules: null
+    rules:
+    - host: release-xwiki.NAMESPACE.gw.dev-cluster.lenovo.com
+      http:
+        paths:
+        - backend:
+            serviceName: release-xwiki
+            servicePort: 80
+          path: /
+    - host: glowroot-release-xwiki.NAMESPACE.gw.dev-cluster.lenovo.com
+      http:
+        paths:
+        - backend:
+            serviceName: release-xwiki
+            servicePort: glowroot
+          path: /
     tls:
     - hosts:
       - glosse4lenovo.lenovo.com

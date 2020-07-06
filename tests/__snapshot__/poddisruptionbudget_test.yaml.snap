@@ -2,7 +2,7 @@ should set values properly:
   1: |
     labels:
       app: release-xwiki
-      chart: xwiki-1.0.6
+      chart: xwiki-1.0.8
       heritage: Tiller
       release: release
     name: release-xwiki

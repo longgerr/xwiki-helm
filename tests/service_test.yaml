@@ -16,6 +16,20 @@ tests:
           of: Service
       - matchSnapshot:
           path: spec
+  - it: should expose glowroot
+    set:
+      service.type: ClusterIP
+      service.externalPort: 80
+      service.internalPort: 8080
+      service.name: tcp
+      glowroot.enabled: true
+    release:
+      name: release
+    asserts:
+      - isKind:
+          of: Service
+      - matchSnapshot:
+          path: spec
   - it: should have same labels as Deployment
     set:
       service.type: ClusterIP

@@ -168,6 +168,13 @@ tomcat:
     # Use value org.apache.catalina.valves.RemoteIpValve
     enableRemoteIPValue: true
 
+## glowroot settings
+glowroot:
+  # Enable glowroot
+  enabled: true
+
+  # Generate ingress host to expose glowroot service
+  ingress: true
 
 ## customConfigAfterFirstStart replace the config values since the second start
 ## During the first start, all configurations are initialized by docker-entrypoint.sh

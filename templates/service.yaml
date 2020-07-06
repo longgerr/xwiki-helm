@@ -14,6 +14,14 @@ spec:
     targetPort: {{ .Values.service.internalPort }}
     protocol: TCP
     name: {{ .Values.service.name }}
+  {{- with .Values.glowroot }}
+  {{- if .enabled }}
+  - port: 4000
+    targetPort: 4000
+    protocol: TCP
+    name: glowroot
+  {{- end }}
+  {{- end }}
   sessionAffinity: ClientIP
   selector:
     app: {{ template "fullname" . }}

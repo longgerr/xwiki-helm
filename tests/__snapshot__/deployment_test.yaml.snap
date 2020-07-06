@@ -30,6 +30,8 @@ should generate additional environment variables:
         configMapKeyRef:
           key: DB_DATABASE
           name: RELEASE-NAME-xwiki
+    - name: JAVA_OPTS
+      value: -Xmx2048m
     - name: SOME_ENV
       value: some-value
 should generate initContainer to patch config files:
@@ -103,6 +105,8 @@ should set environment variables from external DB configMap and secret:
         configMapKeyRef:
           key: DB_NAME_FROM_CONFIGMAP
           name: xwiki-db-config-map
+    - name: JAVA_OPTS
+      value: -Xmx2048m
 should use custom image:
   1: |
     - name: DB_PASSWORD
@@ -135,6 +139,8 @@ should use custom image:
         configMapKeyRef:
           key: DB_DATABASE
           name: RELEASE-NAME-xwiki
+    - name: JAVA_OPTS
+      value: -Xmx2048m
 should use mysql lts image:
   1: |
     - name: DB_PASSWORD
@@ -167,6 +173,8 @@ should use mysql lts image:
         configMapKeyRef:
           key: DB_DATABASE
           name: RELEASE-NAME-xwiki
+    - name: JAVA_OPTS
+      value: -Xmx2048m
 should use postgres lts image:
   1: |
     - name: DB_PASSWORD
@@ -199,3 +207,5 @@ should use postgres lts image:
         configMapKeyRef:
           key: DB_DATABASE
           name: RELEASE-NAME-xwiki
+    - name: JAVA_OPTS
+      value: -Xmx2048m
