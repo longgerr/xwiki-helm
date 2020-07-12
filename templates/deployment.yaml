@@ -114,6 +114,13 @@ spec:
           subPath: server.xml
           {{- end }}
         {{- end }}
+        {{- with .Values.glowroot }}
+          {{- with .properties }}
+        - name: glowroot-properties
+          mountPath: /usr/local/tomcat/glowroot/glowroot.properties
+          subPath: glowroot.properties
+          {{- end }}
+        {{- end }}
       {{- if .Values.customConfigAfterFirstStart }}
       initContainers:
       - name: update-config
@@ -147,6 +154,13 @@ spec:
       {{- with .Values.tomcat }}
         {{- if .customServerConfig }}
       - name: tomcat-config
+        configMap:
+          name: {{ template "fullname" $ }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.glowroot }}
+        {{- with .properties }}
+      - name: glowroot-properties
         configMap:
           name: {{ template "fullname" $ }}
         {{- end }}

@@ -2,6 +2,10 @@
 
 This file documents all notable changes to xwiki Helm Chart. The release numbering uses semantic versioning.
 
+## v1.0.9
+
+* Support value `glowroot.properties` to generate glowroot properties file.
+
 ## v1.0.8
 
 * Support value `glowroot.enabled` and `glowroot.ingress` to expose glowroot to ingress

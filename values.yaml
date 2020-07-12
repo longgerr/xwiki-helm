@@ -176,6 +176,10 @@ glowroot:
   # Generate ingress host to expose glowroot service
   ingress: true
 
+  properties:
+    data.dir: /usr/local/xwiki/data/glowroot
+    log.dir: /usr/local/xwiki/data/glowroot
+
 ## customConfigAfterFirstStart replace the config values since the second start
 ## During the first start, all configurations are initialized by docker-entrypoint.sh
 ## From the second and future start, the provided configurations are modified

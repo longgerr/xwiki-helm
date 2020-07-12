@@ -52,10 +52,16 @@ should properly set value:
   1: |
     - mountPath: /usr/local/xwiki/data
       name: xwiki-data
+    - mountPath: /usr/local/tomcat/glowroot/glowroot.properties
+      name: glowroot-properties
+      subPath: glowroot.properties
   2: |
     - name: xwiki-data
       persistentVolumeClaim:
         claimName: RELEASE-NAME-xwiki
+    - configMap:
+        name: RELEASE-NAME-xwiki
+      name: glowroot-properties
 should properly set value pvc:
   1: |
     accessModes:

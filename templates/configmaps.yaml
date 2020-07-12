@@ -38,6 +38,14 @@ data:
     {{- ( tpl ($.Files.Get "files/server.xml") $ ) | nindent 4 }}
   {{- end }}
 {{- end }}
+{{- with .Values.glowroot }}
+  {{- with .properties -}}
+  glowroot.properties: |-
+    {{- range $k, $v := . }}
+      {{- printf "%s=%s" $k $v | nindent 6 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
 # {{- range $key, $value := .Values.database }}
 #   {{ $key }}: {{ $value | indent 4 }}
 # {{- end }}
