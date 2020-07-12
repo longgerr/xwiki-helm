@@ -127,3 +127,14 @@ tests:
           path: data.server\.xml
       - matchSnapshot:
           path: data.server\.xml
+  - it: should include glowroot.properties into configmap
+    set: 
+      glowroot:
+        properties:
+          data.dir: /usr/local/xwiki/data/glowroot
+          log.dir: /usr/local/xwiki/data/glowroot
+    asserts:
+      - isNotNull:
+          path: data.glowroot\.properties
+      - matchSnapshot:
+          path: data.glowroot\.properties

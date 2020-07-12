@@ -39,10 +39,10 @@ data:
   {{- end }}
 {{- end }}
 {{- with .Values.glowroot }}
-  {{- with .properties -}}
+  {{- with .properties }}
   glowroot.properties: |-
     {{- range $k, $v := . }}
-      {{- printf "%s=%s" $k $v | nindent 6 }}
+      {{- printf "%s=%s" $k $v | nindent 4 }}
     {{- end }}
   {{- end }}
 {{- end }}

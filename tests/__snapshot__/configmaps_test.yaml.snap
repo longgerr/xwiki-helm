@@ -1,3 +1,8 @@
+should include glowroot.properties into configmap:
+  1: |
+    |-
+      data.dir=/usr/local/xwiki/data/glowroot
+      log.dir=/usr/local/xwiki/data/glowroot
 should include tomcat settings into configmap:
   1: |
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!--\n  Licensed to the Apache Software
@@ -92,8 +97,7 @@ should include tomcat settings into configmap:
       via a request headers (e.g. \"X-Forwarded-For\").\n             Refer to:\n             https://www.xwiki.org/xwiki/bin/view/Documentation/AdminGuide/Installation/InstallationWAR/InstallationTomcat/#HConfiguringtomcatforhttps\n
       \       -->\n        <Valve className=\"org.apache.catalina.valves.RemoteIpValve\"
       \n               remoteIpHeader=\"x-forwarded-for\" protocolHeader=\"x-forwarded-proto\"
-      />\n      </Host>\n    </Engine>\n  </Service>\n</Server>\nglowroot.properties:
-      |-\n  data.dir=/usr/local/xwiki/data/glowroot\n  log.dir=/usr/local/xwiki/data/glowroot"
+      />\n      </Host>\n    </Engine>\n  </Service>\n</Server>"
 should not include remoteIPValue settings into configmap:
   1: |
     |-
@@ -267,9 +271,6 @@ should not include remoteIPValue settings into configmap:
           </Engine>
         </Service>
       </Server>
-      glowroot.properties: |-
-        data.dir=/usr/local/xwiki/data/glowroot
-        log.dir=/usr/local/xwiki/data/glowroot
 should set values properly:
   1: |
     null
