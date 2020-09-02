@@ -2,6 +2,10 @@
 
 This file documents all notable changes to xwiki Helm Chart. The release numbering uses semantic versioning.
 
+## v1.0.10
+
+* Add `readinessProbe` and `livenessProbe`. Use exec command instead of httpGet because xwiki returns 302 and 401 when get /
+
 ## v1.0.9
 
 * Support value `glowroot.properties` to generate glowroot properties file.

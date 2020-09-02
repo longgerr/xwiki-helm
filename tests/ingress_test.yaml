@@ -4,6 +4,7 @@ templates:
   - service.yaml
 tests:
   - it: should set values properly
+    template: ingress.yaml
     set:
       annotations.kubernetes.io/ingress.class: nginx
       service.type: ClusterIP
@@ -38,6 +39,7 @@ tests:
       - matchSnapshot:
           path: spec
   - it: should not expose glowroot
+    template: ingress.yaml
     set:
       annotations.kubernetes.io/ingress.class: nginx
       service.type: ClusterIP

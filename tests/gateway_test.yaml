@@ -3,6 +3,7 @@ templates:
   - gateway.yaml
 tests:
   - it: should set values properly of Gateway
+    documentIndex: 0
     set:
       istio.enabled: true
     release:

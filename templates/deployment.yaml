@@ -121,6 +121,20 @@ spec:
           subPath: glowroot.properties
           {{- end }}
         {{- end }}
+        livenessProbe:
+          exec:
+            command:
+            - curl
+            - http://localhost:8080
+          initialDelaySeconds: 60
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - curl
+            - http://localhost:8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
       {{- if .Values.customConfigAfterFirstStart }}
       initContainers:
       - name: update-config

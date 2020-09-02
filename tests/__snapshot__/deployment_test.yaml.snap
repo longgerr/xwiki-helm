@@ -48,6 +48,99 @@ should generate initContainer to patch config files:
       volumeMounts:
       - mountPath: /usr/local/xwiki/data
         name: xwiki-data
+should mount tomcat configmap:
+  1: |
+    containers:
+    - env:
+      - name: DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: DB_PASSWORD
+            name: RELEASE-NAME-xwiki
+      - name: INDEX_HOST
+        valueFrom:
+          configMapKeyRef:
+            key: INDEX_HOST
+            name: RELEASE-NAME-xwiki
+      - name: INDEX_PORT
+        valueFrom:
+          configMapKeyRef:
+            key: INDEX_PORT
+            name: RELEASE-NAME-xwiki
+      - name: DB_HOST
+        valueFrom:
+          configMapKeyRef:
+            key: DB_HOST
+            name: RELEASE-NAME-xwiki
+      - name: DB_USER
+        valueFrom:
+          configMapKeyRef:
+            key: DB_USER
+            name: RELEASE-NAME-xwiki
+      - name: DB_DATABASE
+        valueFrom:
+          configMapKeyRef:
+            key: DB_DATABASE
+            name: RELEASE-NAME-xwiki
+      - name: JAVA_OPTS
+        value: -Xmx2048m
+      image: xwiki:lts-mysql-tomcat
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        exec:
+          command:
+          - curl
+          - http://localhost:8080
+        initialDelaySeconds: 60
+        periodSeconds: 5
+      name: xwiki
+      ports:
+      - containerPort: 8080
+      readinessProbe:
+        exec:
+          command:
+          - curl
+          - http://localhost:8080
+        initialDelaySeconds: 10
+        periodSeconds: 5
+      resources:
+        limits:
+          cpu: 3000m
+          memory: 6000Mi
+        requests:
+          cpu: 500m
+          memory: 3000Mi
+      volumeMounts:
+      - mountPath: /usr/local/xwiki/data
+        name: xwiki-data
+      - mountPath: /usr/local/tomcat/conf/server.xml
+        name: tomcat-config
+        subPath: server.xml
+      - mountPath: /usr/local/tomcat/glowroot/glowroot.properties
+        name: glowroot-properties
+        subPath: glowroot.properties
+    hostAliases: null
+    initContainers:
+    - command:
+      - /bin/bash
+      - -c
+      - update-config.sh -c "xwiki.cfg" -a "xwiki.authentication.authclass" -v "org.xwiki.contrib.authentication.customfield.CustomFieldAuthenticator" -r "/usr/local/xwiki/data"
+      image: langyb/xwiki-toolbox:latest
+      imagePullPolicy: Always
+      name: update-config
+      volumeMounts:
+      - mountPath: /usr/local/xwiki/data
+        name: xwiki-data
+    volumes:
+    - name: xwiki-data
+      persistentVolumeClaim:
+        claimName: RELEASE-NAME-xwiki
+    - configMap:
+        name: RELEASE-NAME-xwiki
+      name: tomcat-config
+    - configMap:
+        name: RELEASE-NAME-xwiki
+      name: glowroot-properties
 should properly set value:
   1: |
     - mountPath: /usr/local/xwiki/data

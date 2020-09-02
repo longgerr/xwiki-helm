@@ -3,6 +3,7 @@ templates:
   - deployment.yaml
 tests:
   - it: should use custom image
+    documentIndex: 0
     set:
       image.tag: latest
       mysql.enabled: false
@@ -20,6 +21,7 @@ tests:
           path: metadata.labels.app
           value: RELEASE-NAME-xwiki       
   - it: should use mysql lts image
+    documentIndex: 0
     set:
       image.tag: latest
       mysql.enabled: true
@@ -36,6 +38,7 @@ tests:
           path: metadata.labels.app
           value: RELEASE-NAME-xwiki
   - it: should use postgres lts image
+    documentIndex: 0
     set:
       image.tag: latest
       mysql.enabled: false
@@ -52,6 +55,7 @@ tests:
           path: metadata.labels.app
           value: RELEASE-NAME-xwiki
   - it: should properly set value
+    documentIndex: 0
     set:
       image.pullPolicy: IfNotPresent
       service.internalPort: 8080
@@ -95,6 +99,7 @@ tests:
           value: RELEASE-NAME-xwiki
         documentIndex: 1
   - it: should use empty local storage
+    documentIndex: 0
     set:
       persistentStorage.enabled: false
     asserts:
@@ -122,6 +127,7 @@ tests:
                 operator: In
                 values:
                 - "true"
+    documentIndex: 0
     asserts:
       - isKind:
           of: Deployment
@@ -147,6 +153,7 @@ tests:
                 operator: In
                 values:
                 - "true"
+    documentIndex: 0
     asserts:
       - isKind:
           of: Deployment
@@ -190,13 +197,17 @@ tests:
             configMapKeyRef:
               name: xwiki-db-config-map
               key: DB_HOST_FROM_CONFIGMAP
+    documentIndex: 0
     asserts:
     - matchSnapshot:
           path: spec.template.spec.containers[0].env
   - it: should mount tomcat configmap
     set: 
-      tomcat.customServerConfig: true
+      tomcat.customServerConfig.enableRemoteIPValue: true
+    documentIndex: 0
     asserts:
+      - matchSnapshot:
+          path: spec.template.spec
       - equal:
           path: spec.template.spec.volumes[1].name
           value: tomcat-config
@@ -217,6 +228,7 @@ tests:
       customConfigAfterFirstStart:
         xwiki.cfg:
           xwiki.superadminpassword: "the-pass-word"
+    documentIndex: 0
     asserts:
     - matchSnapshot:
         path: spec.template.spec.initContainers
@@ -225,6 +237,7 @@ tests:
     set:
       env:
         SOME_ENV: some-value
+    documentIndex: 0
     asserts:
     - matchSnapshot:
         path: spec.template.spec.containers[0].env

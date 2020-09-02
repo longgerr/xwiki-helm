@@ -4,6 +4,7 @@ templates:
   - deployment.yaml
 tests:
   - it: should set values properly
+    template: service.yaml
     set:
       service.type: ClusterIP
       service.externalPort: 80
@@ -17,6 +18,7 @@ tests:
       - matchSnapshot:
           path: spec
   - it: should expose glowroot
+    template: service.yaml
     set:
       service.type: ClusterIP
       service.externalPort: 80
@@ -42,11 +44,14 @@ tests:
       - equal:
           path: spec.selector.app
           value: release-xwiki
+        template: service.yaml
       - equal:
           path: spec.selector.matchLabels.app
           value: release-xwiki
         template: deployment.yaml
+        documentIndex: 0
       - equal:
           path: spec.template.metadata.labels.app
           value: release-xwiki
         template: deployment.yaml
+        documentIndex: 0
